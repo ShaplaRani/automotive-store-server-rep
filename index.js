@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 const uri = "mongodb+srv://automotive:akZbAGGrtB2sHGSp@cluster0.ei0qpxt.mongodb.net/?retryWrites=true&w=majority";
-
+console.log(uri);
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -78,7 +78,7 @@ async function run() {
        }) 
 
       //cart related api
-      
+
       app.get("/cart", async(req, res)=> {
         const cursor = cartCollection.find();
         const result = await cursor.toArray()

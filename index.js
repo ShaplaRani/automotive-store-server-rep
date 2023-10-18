@@ -27,7 +27,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+
+    //  await client.connect();
     const automotiveCollection = client.db("automotiveDB").collection("automotive")
     const cartCollection = client.db("automotiveDB").collection("cart")
     //data read 
@@ -77,31 +78,16 @@ async function run() {
        }) 
 
       //cart related api
+      
       app.get("/cart", async(req, res)=> {
         const cursor = cartCollection.find();
         const result = await cursor.toArray()
         res.send(result)
       })
 
-    //   app.get("/cart/:id", async(req, res)=>{
-    //     const id = req.params.id;
-    //     console.log('read', id);
-    //     const query= {_id: new ObjectId(id)}
-    //     console.log(query);
-    //     const result = await cartCollection.findOne(query)
-    //     console.log(result);
-    //     res.send(result)
+    
+      
 
-    // })
-
-    //   app.get("/cart/:id", async(req, res)=> {
-    //     const id = req.params.id;
-    //     console.log('read', id);
-    //     const query = {_id: new ObjectId(id)}
-    //     const result = await cartCollection.findOne(query);
-    //     console.log(result);
-    //     res.send(result)
-    //   })
 
       app.post('/cart' , async(req, res) => {
         const newCart = req.body;
@@ -113,10 +99,10 @@ async function run() {
       app.delete('/cart/:id' ,  async (req, res) => {
         const id = req.params.id;
         console.log('delete', id);
-        const query = {_id: new ObjectId(id)}
+        const query = {_id: id}
         console.log(query);
         const result = await cartCollection.deleteOne(query);
-       
+        console.log(result);
         res.send(result);
       })
       

@@ -29,6 +29,12 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const automotiveCollection = client.db("automotiveDB").collection("automotive")
+    //data read 
+    app.get("/automotive", async(req, res)=> {
+        const cursor = automotiveCollection.find();
+      const result = await cursor.toArray()
+      res.send(result)
+    })
      //create a product
      app.post('/automotive' , async(req, res) => {
         const newProduct = req.body;

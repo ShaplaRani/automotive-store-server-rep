@@ -29,6 +29,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const automotiveCollection = client.db("automotiveDB").collection("automotive")
+    const cartCollection = client.db("automotiveDB").collection("cart")
     //data read 
     app.get("/automotive", async(req, res)=> {
         const cursor = automotiveCollection.find();
@@ -39,7 +40,9 @@ async function run() {
     app.get("/automotive/:id", async(req, res)=>{
         const id = req.params.id;
         const query= {_id: new ObjectId(id)}
+        console.log(query);
         const result = await automotiveCollection.findOne(query)
+        console.log(result);
         res.send(result)
 
     })
@@ -50,6 +53,73 @@ async function run() {
         const result = await automotiveCollection.insertOne(newProduct);
         res.send(result);
       })
+
+      //update
+      app.put('/automotive/:id', async(req,res) => {
+        const id =  req.params.id;
+        const product = req.body;
+        const filter= {_id: new ObjectId(id)}
+        const option = {upsert: true}
+        const updateProduct = {
+         $set: {
+           photo: product.photo,
+           name:product.name,
+           brand:product.brand,
+           type:product.type,
+           price:product.price,
+           description:product.description,
+           rating:product.rating,
+           
+         }
+        }
+        const result = await automotiveCollection.updateOne(filter, updateProduct, option)
+        res.send(result)
+       }) 
+
+      //cart related api
+      app.get("/cart", async(req, res)=> {
+        const cursor = cartCollection.find();
+        const result = await cursor.toArray()
+        res.send(result)
+      })
+
+    //   app.get("/cart/:id", async(req, res)=>{
+    //     const id = req.params.id;
+    //     console.log('read', id);
+    //     const query= {_id: new ObjectId(id)}
+    //     console.log(query);
+    //     const result = await cartCollection.findOne(query)
+    //     console.log(result);
+    //     res.send(result)
+
+    // })
+
+    //   app.get("/cart/:id", async(req, res)=> {
+    //     const id = req.params.id;
+    //     console.log('read', id);
+    //     const query = {_id: new ObjectId(id)}
+    //     const result = await cartCollection.findOne(query);
+    //     console.log(result);
+    //     res.send(result)
+    //   })
+
+      app.post('/cart' , async(req, res) => {
+        const newCart = req.body;
+        console.log(newCart);
+        const result = await cartCollection.insertOne(newCart);
+        res.send(result);
+      })
+
+      app.delete('/cart/:id' ,  async (req, res) => {
+        const id = req.params.id;
+        console.log('delete', id);
+        const query = {_id: new ObjectId(id)}
+        console.log(query);
+        const result = await cartCollection.deleteOne(query);
+       
+        res.send(result);
+      })
+      
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

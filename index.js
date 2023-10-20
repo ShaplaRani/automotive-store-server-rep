@@ -36,7 +36,7 @@ async function run() {
     const automotiveCollection = client.db("automotiveDB").collection("automotive")
     const cartCollection = client.db("automotiveDB").collection("cart")
     //data read 
-    app.get("/automotive", async(req, res)=> {
+    app.get("/automotive", async(req, res)=> { 
         const cursor = automotiveCollection.find();
       const result = await cursor.toArray()
       res.send(result)
